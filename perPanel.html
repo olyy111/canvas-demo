@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			/*body {
+				background: #000;
+				margin:0;
+			}
+			#c {
+				background: #fff;
+			}*/
+		</style>
+	</head>
+	<body>
+		<div id="box"></div>
+		
+		<script>
+			var oBox = document.getElementById("box");
+			//percent:百分比占有量    | elem:包装canvas的容器
+			function panel(percent, elem){
+				//canvas放入容器
+				elem.innerHTML = '<canvas id="c" width="500" height="500"></canvas>';
+				
+				/* pi:一度对应的弧度
+				 * fullAngle:显示的有效角度
+				 * preAngle:以0%点为基准,旋转的度数
+				 * caption:表盘中央信息
+				 * x:画布中心，圆心x轴坐标
+				 * y:或不中心，圆心y轴坐标
+				 */
+				
+				var oC = document.getElementById("c"),
+					ctx = oC.getContext('2d'),
+					pi = Math.PI/180, 
+					fullAngle = 300,
+					perAngle = 300*percent/100,
+					caption = "百分比",
+					x = oC.width/2,
+					y = oC.height/2;
+				//-----外层----	
+				//包裹百分比圆环的外层圆
+				ctx.fillStyle = "#999999";
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				ctx.arc(x, y, 150, 120*pi, 60*pi, false);
+				ctx.closePath(); 
+				ctx.fill();
+				
+				//根据百分比绘制一个不同颜色的圆形覆盖上去
+				ctx.fillStyle = "#3399ff";
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				ctx.arc(x, y, 150, 120*pi, (120+perAngle)*pi, false);
+				ctx.closePath();
+				ctx.fill();
+				
+				//一个白色园覆盖最外层实心园，做成圆环效果
+				ctx.fillStyle = "#FFFFFF";
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				ctx.arc(x, y, 135, 0, 360*pi, false);
+				ctx.closePath();
+				ctx.fill();
+				
+				//-----内部-----
+				//内部园，基本信息在这里显示
+				ctx.fillStyle = "#d8e2ec";
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				ctx.arc(x, y, 90, 0, 360*pi, false);
+				ctx.closePath();
+				ctx.fill();
+				//表盘文字
+				ctx.font = "10px impact";
+				ctx.fillStyle = '#3399ff';
+				ctx.textBaseline = "middle";
+				ctx.textAlign =  'center';
+				//改变画布基准点到画布中心
+				ctx.translate(x, y);
+				//百分比文字，以圆心到y轴正方向为基准， 30deg-330deg，求得文字距离基准点的坐标
+				for(var i=0;i<11;i++){
+					var strPer = i*10 + "%";
+					ctx.fillText(strPer, -120*Math.sin(30*(i+1)*pi), 120*Math.cos(30*(i+1)*pi));
+				} 
+				//信息
+				ctx.font = "16px impact";
+				ctx.fillText(percent+'/100', 0, 0);
+				ctx.font = "16px 宋体";
+				ctx.fillText(caption, 0, 20);
+			}
+			panel(88, oBox);
+		</script>
+	</body>
+</html>
